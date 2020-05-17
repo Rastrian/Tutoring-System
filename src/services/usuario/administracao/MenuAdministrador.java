@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import services.MainService;
 import services.managers.cursos.CriarCurso;
 import services.managers.cursos.DeletarCurso;
 import services.managers.cursos.ListarCursos;
@@ -16,7 +17,7 @@ import services.managers.vagas.AdicionarVagaEdital;
 import services.managers.vagas.CriarVaga;
 import services.managers.vagas.DeletarVaga;
 
-public class MenuAdministrador implements Runnable {
+public class MenuAdministrador extends MainService {
     private volatile boolean closeThread;
     private static boolean inUse;
 

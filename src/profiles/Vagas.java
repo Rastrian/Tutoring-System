@@ -97,7 +97,7 @@ public class Vagas implements Serializable {
 
     public String getTurnoName(Integer id) {
         for (Turnos t : Turnos.values()){
-            if (t.getValue() == this.id){
+            if (t.getValue().equals(this.id)){
                 return t.getTurno(id);
             }
         }

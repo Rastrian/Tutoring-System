@@ -48,7 +48,7 @@ public class CriarCurso implements Runnable {
             }
         }
         cursos.setNome(output);
-        while (id.equals(null)) {
+        while (id == null) {
             id = (repository.count() + 1);
         }
         while ((cursoExists(id)) != null) {

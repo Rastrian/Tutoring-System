@@ -1,7 +1,7 @@
 package enums;
 
 public enum Turnos {
-    MANHA(0), TARDE(1), NOITE(3);
+    MANHA(0), TARDE(1), NOITE(2);
      
     private Integer value;
 

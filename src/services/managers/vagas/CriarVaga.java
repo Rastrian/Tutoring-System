@@ -44,6 +44,7 @@ public class CriarVaga implements Runnable {
         while (!closeThread) {
             try {
                 repository = new VagasDAO();
+                repositoryCursos = new CursosDAO();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -95,7 +96,7 @@ public class CriarVaga implements Runnable {
             }
         }
         vaga.setTurno(output);
-        
+        this.chooseCargaHoraria();
     }
 
     public void chooseCargaHoraria(){
@@ -125,6 +126,7 @@ public class CriarVaga implements Runnable {
         vaga.setStatus(true);
         repository.remove(vaga);
         repository.add(vaga);
+        System.out.println("\nAdicionada Vaga\n\nID: "+vaga.getId()+"\nCarga Horaria: "+vaga.getCarga_horaria()+"h");
         AdicionarVagaEdital adcVaga = new AdicionarVagaEdital();
         Thread t = new Thread(adcVaga);
         t.start();

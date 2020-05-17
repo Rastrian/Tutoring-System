@@ -3,7 +3,7 @@ package services.managers.edital;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Set;
+import java.util.List;
 
 import dao.CursosDAO;
 import dao.EditaisDAO;
@@ -14,7 +14,6 @@ import profiles.Vagas;
 public class InfoEdital implements Runnable {
     private volatile boolean closeThread;
 
-    private static Editais edital;
     private static EditaisDAO repository;
     private static CursosDAO repositoryCursos;
 
@@ -30,7 +29,12 @@ public class InfoEdital implements Runnable {
     @Override
     public void run() {
         while (!closeThread) {
-            edital = new Editais();
+            try {
+                repository = new EditaisDAO();
+                repositoryCursos = new CursosDAO();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             this.start();
         }
     }
@@ -51,9 +55,14 @@ public class InfoEdital implements Runnable {
             shutdown();
             return;
         }
-        edital = editalExists(output);
+        Editais edital = null;
+        for (Editais e : repository.getAll()){
+            if (e.getId().equals(output)){
+                edital = e;
+            }
+        }
         if (edital != null){
-            Set<Vagas> vagas = edital.getVagas();
+            List<Vagas> vagas = edital.getVagas();
             System.out.println("Informações do Edital:\n\nID: "+edital.getId()
                 +"\nVagas:");
             if (vagas != null)
@@ -69,15 +78,6 @@ public class InfoEdital implements Runnable {
             System.out.println("Edital não encontrado.");
         }
         shutdown();
-    }
-
-    public Editais editalExists(Integer id){
-        for (Editais e : repository.getAll()){
-            if (e.getId().equals(id)){
-                return e;
-            }
-        }
-        return null;
     }
 
     public void shutdown() {

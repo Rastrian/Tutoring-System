@@ -77,7 +77,7 @@ public class LoginUsuario extends MainService {
                 System.out.println("Bem vindo "+u.getNome()+", ao menu de Monitores.");
             }
         }
-        if ((u.getRole()).equals(2) || (u.getRole()).equals(1)){
+        if (u.getRole().equals(2) || u.getRole().equals(1)){
             System.out.println("Bem vindo "+u.getNome()+", ao menu de Coordenador.");
             MenuAdministrador MAdmin = new MenuAdministrador();
             Thread t = new Thread(MAdmin);

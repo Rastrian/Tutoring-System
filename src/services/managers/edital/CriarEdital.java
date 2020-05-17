@@ -26,7 +26,7 @@ public class CriarEdital implements Runnable {
 
     public void start() {
         Integer id = null;
-        while (id.equals(null)){
+        while (id == null){
             id = (repository.count() + 1);
         }
         while ((editalExists(id)) != null) {

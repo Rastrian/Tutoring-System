@@ -1,7 +1,7 @@
 package enums;
 
 public enum Roles {
-    ALUNO(0), PROFESSOR(1), COORDENADOR(3);
+    ALUNO(0), PROFESSOR(1), COORDENADOR(2);
 
     private Integer value;
 

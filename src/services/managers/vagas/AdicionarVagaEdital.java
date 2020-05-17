@@ -3,7 +3,6 @@ package services.managers.vagas;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Set;
 
 import dao.EditaisDAO;
 import dao.VagasDAO;
@@ -19,20 +18,12 @@ public class AdicionarVagaEdital implements Runnable {
     private static Vagas vaga;
     private static Editais edital;
 
-    public Vagas vagaExists(Integer id){
-        for (Vagas e : repositoryVagas.getAll()){
-            if (e.getId().equals(id)){
-                return e;
-            }
-        }
-        return null;
-    }
-
     @Override
     public void run() {
         while (!closeThread) {
             try {
                 repository = new EditaisDAO();
+                repositoryVagas = new VagasDAO();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -60,12 +51,12 @@ public class AdicionarVagaEdital implements Runnable {
             shutdown();
             return;
         }
-        if ((vagaExists(output)) == null){
+        vaga = vagaExists(output);
+        if (vaga == null){
             System.out.println("Vaga não encontrada.");
             shutdown();
             return;
         } 
-        vaga = vagaExists(output);
         if (vaga.getStatus() == false){
             System.out.println("Esta vaga já foi adicionada em outro edital");
             shutdown();
@@ -93,15 +84,14 @@ public class AdicionarVagaEdital implements Runnable {
         if ((editalExists(output)) == null){
             System.out.println("Edital não encontrado.");
             shutdown();
+            return;
         } 
         edital = editalExists(output);
-        Set<Vagas> vagas = edital.getVagas();
-        repositoryVagas.remove(vaga);
         vaga.setStatus(true);
+        repositoryVagas.remove(vaga);
         repositoryVagas.add(vaga);
-        vagas.add(vaga);
+        edital.addVaga(vaga);
         edital.setStatus(true);
-        edital.setVagas(vagas);
         repository.update(edital);
         System.out.println("\nEdital #"+edital.getId()+" atualizado.\n");
         shutdown();
@@ -111,6 +101,15 @@ public class AdicionarVagaEdital implements Runnable {
         for (Editais e : repository.getAll()){
             if (e.getId().equals(id)){
                 return e;
+            }
+        }
+        return null;
+    }
+
+    public Vagas vagaExists(Integer id){
+        for (Vagas v : repositoryVagas.getAll()){
+            if (v.getId().equals(id)){
+                return v;
             }
         }
         return null;

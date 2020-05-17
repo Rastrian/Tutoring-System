@@ -1,21 +1,22 @@
 package profiles;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class Editais implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-    private Set<Vagas> vagas;
+    private List<Vagas> vagas = new ArrayList<Vagas>();
     private boolean status;
 
     public Editais() {
     }
 
-    public Editais(Integer id, Set<Vagas> vagas, boolean status) {
+    public Editais(Integer id, List<Vagas> vagas, boolean status) {
         this.id = id;
         this.vagas = vagas;
         this.status = status;
@@ -35,11 +36,23 @@ public class Editais implements Serializable {
         this.id = id;
     }
 
-    public Set<Vagas> getVagas() {
+    public List<Vagas> getVagas() {
         return this.vagas;
     }
 
-    public void setVagas(Set<Vagas> vagas) {
+    public void addVaga(Vagas vaga){
+        if (!vagas.contains(vaga)){
+            vagas.add(vaga);
+        }
+    }
+
+    public void removeVaga(Vagas vaga){
+        if (vagas.contains(vaga)){
+            vagas.remove(vaga);
+        }
+    }
+
+    public void setVagas(List<Vagas> vagas) {
         this.vagas = vagas;
     }
 
@@ -60,7 +73,7 @@ public class Editais implements Serializable {
         return this;
     }
 
-    public Editais vagas(Set<Vagas> vagas) {
+    public Editais vagas(List<Vagas> vagas) {
         this.vagas = vagas;
         return this;
     }

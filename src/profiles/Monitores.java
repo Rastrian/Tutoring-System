@@ -2,6 +2,7 @@ package profiles;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -12,8 +13,8 @@ public class Monitores implements Serializable {
     private Integer id;
     private Integer idusuario;
     private Integer idvaga;
-    private Set<Relatorios> relatorios;
-    private Set<Date> presenca;
+    private Set<Relatorios> relatorios = new HashSet<Relatorios>();
+    private Set<Date> presenca = new HashSet<Date>();
     private boolean status;
 
     public Monitores() {
