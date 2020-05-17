@@ -3,13 +3,18 @@ package enums;
 public enum Turnos {
     MANHA(0), TARDE(1), NOITE(3);
      
-    private final int value;
+    private Integer value;
 
-    Turnos(int opt){
+    Turnos(Integer opt){
         value = opt;
     }
 
-    public int getValue(){
+    public Integer getValue(){
         return value;
     }
+
+	public String getTurno(int opt) {
+        value = opt;
+		return this.name();
+	}
 }

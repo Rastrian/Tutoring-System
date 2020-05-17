@@ -4,6 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import dao.CandidatosDAO;
+import dao.CursosDAO;
+import dao.EditaisDAO;
+import dao.MonitoresDAO;
+import dao.RelatoriosDAO;
+import dao.UsuarioDAO;
+import dao.VagasDAO;
 import services.usuario.CadastroUsuario;
 import services.usuario.LoginUsuario;
 
@@ -14,12 +21,13 @@ public class MainService implements Runnable {
     @Override
     public void run() {
         while (!closeThread) {
+/*            this.InitDAO(); */
             this.start();
         }
     }
 
     public void start() {
-        System.out.println("\nOpções:\n\n1 → Entrar com Usuario\n2 → Cadastrar usuario\n\nInsira a opção desejada:");
+        System.out.println("\nOpções:\n\n0 → Sair\n1 → Entrar com Usuario\n2 → Cadastrar usuario\n\nInsira a opção desejada:");
         Integer output = null;
         while (output == null) {
             if (!inUse) {
@@ -56,6 +64,27 @@ public class MainService implements Runnable {
                 e.printStackTrace();
             }
             inUse();
+        }
+        if (output == 0){
+            shutdown();
+        }
+    }
+
+    public void InitDAO(){
+        try {
+            Object dao;
+            dao = new CandidatosDAO();
+            dao = new CursosDAO();
+            dao = new EditaisDAO();
+            dao = new MonitoresDAO();
+            dao = new RelatoriosDAO();
+            dao = new UsuarioDAO();
+            dao = new VagasDAO();
+            if (dao != null){
+                System.out.println("→ DAO's iniciados.");
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 

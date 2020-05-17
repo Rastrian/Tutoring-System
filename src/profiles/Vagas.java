@@ -3,6 +3,8 @@ package profiles;
 import java.io.Serializable;
 import java.util.Objects;
 
+import enums.Turnos;
+
 public class Vagas implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -91,6 +93,15 @@ public class Vagas implements Serializable {
     public Vagas status(boolean status) {
         this.status = status;
         return this;
+    }
+
+    public String getTurnoName(Integer id) {
+        for (Turnos t : Turnos.values()){
+            if (t.getValue() == this.id){
+                return t.getTurno(id);
+            }
+        }
+        return null;
     }
 
     @Override

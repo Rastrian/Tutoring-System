@@ -79,16 +79,16 @@ public class CadastroUsuario extends MainService {
                 if (output < 0){
                     output = output * -1;
                 }
-                newUser.setId(output);                
-                System.out.println("\nDados do novo usuario:\n\nMatricula: "+newUser.getId()
-                    +" \nNome: "+newUser.getNome()+
-                    "\nCargo: " + newUser.getRoleName());
-            
-                repository.add(newUser);
             } catch (NumberFormatException | IOException e) {
                 System.out.println("Insira um formato valido");
             }
         }
+        newUser.setId(output);                
+        System.out.println("\nDados do novo usuario:\n\nMatricula: "+newUser.getId()
+            +" \nNome: "+newUser.getNome()+
+            "\nCargo: " + newUser.getRoleName());
+    
+        repository.add(newUser);
         shutdown();
     }
 

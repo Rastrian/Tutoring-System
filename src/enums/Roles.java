@@ -1,15 +1,15 @@
 package enums;
 
 public enum Roles {
-    ALUNO(0), PROFESSOR(1), ADMINISTRADOR(3);
+    ALUNO(0), PROFESSOR(1), COORDENADOR(3);
 
-    private int value;
+    private Integer value;
 
-    Roles(int opt) {
+    Roles(Integer opt) {
         value = opt;
     }
 
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
 
@@ -17,12 +17,12 @@ public enum Roles {
         return this.name();
     }
 
-    public String getRole(int opt) {
+    public String getRole(Integer opt) {
         value = opt;
         return this.name();
     }
 
-    public String getEventName(int id) {
+    public String getEventName(Integer id) {
         for (Roles role : Roles.values()){
             if (role.getValue() == id){
                 return role.getRole();

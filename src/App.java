@@ -3,11 +3,11 @@ import services.MainService;
 public class App {
     public static void main(String[] args) throws Exception {
         try {
-            System.out.println("Iniciando sistema.");
+            System.out.println("→ Iniciando sistema.");
             MainService rc = new MainService();
             Thread t = new Thread(rc);
             t.start();
-            System.out.println("Sistema finalizado.");
+            System.out.println("→ Sistema finalizado.");
         } catch (Exception e){
             e.printStackTrace();
         }

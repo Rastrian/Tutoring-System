@@ -21,6 +21,12 @@ public class Editais implements Serializable {
         this.status = status;
     }
 
+    public Editais(Integer id) {
+        this.id = id;
+        this.vagas = null;
+        this.status = true;
+    }
+
     public Integer getId() {
         return this.id;
     }
