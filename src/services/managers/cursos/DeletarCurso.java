@@ -10,9 +10,17 @@ import profiles.Cursos;
 public class DeletarCurso implements Runnable {
     private volatile boolean closeThread;
 
-    private static CursosDAO repository;
     private static Cursos cursos;
-    private static UtilsCurso utils;
+    private static CursosDAO repository;
+
+    public Cursos cursoExists(Integer id) {
+        for (Cursos c : repository.getAll()){
+            if (c.getId().equals(id)){
+                return c;
+            }
+        }
+        return null;
+    }
 
     @Override
     public void run() {
@@ -39,11 +47,11 @@ public class DeletarCurso implements Runnable {
                 System.out.println("Insira um formato valido");
             }
         }
-        if (output == -1) {
+        if (output.equals(-1)) {
             shutdown();
             return;
         }
-        cursos = utils.cursoExists(output);
+        cursos = cursoExists(output);
         if (cursos == null) {
             System.out.println("Curso não encontrado.");
         }

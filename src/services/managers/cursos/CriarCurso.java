@@ -10,9 +10,17 @@ import profiles.Cursos;
 public class CriarCurso implements Runnable {
     private volatile boolean closeThread;
 
-    private static CursosDAO repository;
     private static Cursos cursos;
-    private static UtilsCurso utils;
+    private static CursosDAO repository;
+
+    public Cursos cursoExists(Integer id) {
+        for (Cursos c : repository.getAll()){
+            if (c.getId().equals(id)){
+                return c;
+            }
+        }
+        return null;
+    }
 
     @Override
     public void run() {
@@ -40,10 +48,10 @@ public class CriarCurso implements Runnable {
             }
         }
         cursos.setNome(output);
-        while (id == null) {
+        while (id.equals(null)) {
             id = (repository.count() + 1);
         }
-        while ((utils.cursoExists(id)) != null) {
+        while ((cursoExists(id)) != null) {
             id++;
         }
         cursos.setId(id);

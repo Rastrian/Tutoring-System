@@ -7,6 +7,7 @@ public class App {
             MainService rc = new MainService();
             Thread t = new Thread(rc);
             t.start();
+            t.join();
             System.out.println("→ Sistema finalizado.");
         } catch (Exception e){
             e.printStackTrace();

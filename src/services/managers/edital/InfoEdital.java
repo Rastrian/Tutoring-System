@@ -5,17 +5,27 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Set;
 
+import dao.CursosDAO;
+import dao.EditaisDAO;
 import profiles.Cursos;
 import profiles.Editais;
 import profiles.Vagas;
-import services.managers.cursos.UtilsCurso;
 
 public class InfoEdital implements Runnable {
     private volatile boolean closeThread;
 
     private static Editais edital;
-    private static UtilsEdital utils;
-    private static UtilsCurso utilsCurso;
+    private static EditaisDAO repository;
+    private static CursosDAO repositoryCursos;
+
+    public Cursos cursoExists(Integer id) {
+        for (Cursos c : repositoryCursos.getAll()){
+            if (c.getId().equals(id)){
+                return c;
+            }
+        }
+        return null;
+    }
 
     @Override
     public void run() {
@@ -37,18 +47,18 @@ public class InfoEdital implements Runnable {
                 System.out.println("Insira um formato valido");
             }
         }
-        if (output == -1) {
+        if (output.equals(-1)) {
             shutdown();
             return;
         }
-        edital = utils.editalExists(output);
+        edital = editalExists(output);
         if (edital != null){
             Set<Vagas> vagas = edital.getVagas();
             System.out.println("Informações do Edital:\n\nID: "+edital.getId()
                 +"\nVagas:");
             if (vagas != null)
                 vagas.forEach(v -> {
-                    Cursos c = utilsCurso.cursoExists(v.getIdcurso());
+                    Cursos c = cursoExists(v.getIdcurso());
                     System.out.println(v.getId()+" - Curso: "+c.getNome()+" (Turno: "+
                     v.getTurnoName(v.getTurno())+"/ Carga Horaria: "+v.getCarga_horaria()
                     +" Horas)");
@@ -59,6 +69,15 @@ public class InfoEdital implements Runnable {
             System.out.println("Edital não encontrado.");
         }
         shutdown();
+    }
+
+    public Editais editalExists(Integer id){
+        for (Editais e : repository.getAll()){
+            if (e.getId().equals(id)){
+                return e;
+            }
+        }
+        return null;
     }
 
     public void shutdown() {

@@ -21,7 +21,7 @@ public class MainService implements Runnable {
     @Override
     public void run() {
         while (!closeThread) {
-/*            this.InitDAO(); */
+            this.InitDAO();
             this.start();
         }
     }

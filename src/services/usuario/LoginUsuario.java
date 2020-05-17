@@ -3,13 +3,15 @@ package services.usuario;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 import dao.MonitoresDAO;
 import dao.UsuarioDAO;
 import enums.Roles;
 import profiles.Monitores;
 import profiles.Usuario;
-import profiles.tmp.LastLogin;
 import services.MainService;
 import services.usuario.administracao.MenuAdministrador;
 
@@ -17,14 +19,15 @@ public class LoginUsuario extends MainService {
     private volatile boolean closeThread;
 
     private UsuarioDAO repository;
+    private Integer lastUserId = 0;
     private MonitoresDAO repositoryMonitor;
-    private LastLogin lastLogin;
 
     @Override
     public void run() {
         while (!closeThread) {
             try {
                 repository = new UsuarioDAO();
+                repositoryMonitor = new MonitoresDAO();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -49,28 +52,32 @@ public class LoginUsuario extends MainService {
             }
             if (output == -2){
                 for (Usuario u : repository.getAll()){
-                    System.out.println(u.getId()+" - "+u.getNome()+" ("+u.getRoleName()+")");
+                    System.out.println(u.getId()+" - "+u.getNome()+" ("+getRoleName(u.getRole())+")");
                 }
                 return;
             }
-            Usuario u  = this.getUsuario(output);
-            if (u == null){
-                output = null;
-                System.out.println("Usuario não encontrado.");
+        }
+        Usuario u  = null;
+        for (Usuario user : repository.getAll()){
+            if (user.getId().equals(output)){
+                u = user;
             }
         }
-        Usuario u  = getUsuario(output);
-        if (u.getRole() != null){
-            lastLogin.setLastLogin(output);
+        if (u == null){
+            output = null;
+            System.out.println("Usuario não encontrado.");
+            shutdown();
+            return;
         }
-        if (u.getRole() == 0){
-            if (getMonitor(output) == null){
+        this.setLastLogin(output);
+        if (u.getRole().equals(0)){
+            if (isMonitor(output) == false){
                 System.out.println("Bem vindo "+u.getNome()+", ao menu de Alunos.");
             }else{
                 System.out.println("Bem vindo "+u.getNome()+", ao menu de Monitores.");
             }
         }
-        if (u.getRole() == 2 || u.getRole() == 1){
+        if ((u.getRole()).equals(2) || (u.getRole()).equals(1)){
             System.out.println("Bem vindo "+u.getNome()+", ao menu de Coordenador.");
             MenuAdministrador MAdmin = new MenuAdministrador();
             Thread t = new Thread(MAdmin);
@@ -83,27 +90,28 @@ public class LoginUsuario extends MainService {
         }
     }
 
-    public Monitores getMonitor(Integer userId){
-        for (Monitores m : repositoryMonitor.getAll()){
-            if (m.getIdusuario() == userId){
-                return m;
-            }
-        }
-        return null;
+    public void setLastLogin(Integer id) {
+        lastUserId = id;
     }
 
-    public Usuario getUsuario(Integer id){
-        for (Usuario u : repository.getAll()){
-            if (u.getId() == id){
-                return u;
+    public Integer getLastUserId(){
+        return lastUserId;
+    }
+
+    public boolean isMonitor(Integer userId){
+        List<Monitores> monitores = repositoryMonitor.getAll();
+        for (Monitores m : monitores){
+            if (m.getIdusuario().equals(userId)){
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     public String getRoleName(Integer id) {
-        for (Roles role : Roles.values()){
-            if (role.getValue() == id){
+        ArrayList<Roles> cargos = new ArrayList<Roles>(EnumSet.allOf(Roles.class));
+        for (Roles role : cargos){
+            if (role.getValue().equals(id)){
                 return role.getRole();
             }
         }

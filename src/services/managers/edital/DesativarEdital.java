@@ -12,7 +12,6 @@ public class DesativarEdital implements Runnable {
 
     private static EditaisDAO repository;
     private static Editais edital;
-    private static UtilsEdital utils;
 
     @Override
     public void run() {
@@ -38,11 +37,11 @@ public class DesativarEdital implements Runnable {
                 System.out.println("Insira um formato valido");
             }
         }
-        if (output == -1){
+        if (output.equals(-1)){
             shutdown();
             return;
         }
-        edital = utils.editalExists(output);
+        edital = editalExists(output);
         if (edital == null){
             System.out.println("Curso não encontrado.");
             shutdown();
@@ -52,6 +51,15 @@ public class DesativarEdital implements Runnable {
         edital.setStatus(false);
         repository.add(edital);
         shutdown();
+    }
+
+    public Editais editalExists(Integer id){
+        for (Editais e : repository.getAll()){
+            if (e.getId().equals(id)){
+                return e;
+            }
+        }
+        return null;
     }
 
     public void shutdown() {

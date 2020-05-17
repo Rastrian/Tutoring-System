@@ -91,7 +91,7 @@ public class Usuario implements Serializable {
 
     public String getRoleName() {
         for (Roles role : Roles.values()){
-            if (role.getValue() == id){
+            if (role.getValue().equals(id)){
                 return role.getRole();
             }
         }

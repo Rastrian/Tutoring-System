@@ -9,7 +9,6 @@ import dao.EditaisDAO;
 import dao.VagasDAO;
 import profiles.Editais;
 import profiles.Vagas;
-import services.managers.edital.UtilsEdital;
 
 public class AdicionarVagaEdital implements Runnable {
     private volatile boolean closeThread;
@@ -20,8 +19,14 @@ public class AdicionarVagaEdital implements Runnable {
     private static Vagas vaga;
     private static Editais edital;
 
-    private static UtilsVagas utils;
-    private static UtilsEdital utilsEdital;
+    public Vagas vagaExists(Integer id){
+        for (Vagas e : repositoryVagas.getAll()){
+            if (e.getId().equals(id)){
+                return e;
+            }
+        }
+        return null;
+    }
 
     @Override
     public void run() {
@@ -55,12 +60,12 @@ public class AdicionarVagaEdital implements Runnable {
             shutdown();
             return;
         }
-        if ((utils.vagaExists(output)) == null){
+        if ((vagaExists(output)) == null){
             System.out.println("Vaga não encontrada.");
             shutdown();
             return;
         } 
-        vaga = utils.vagaExists(output);
+        vaga = vagaExists(output);
         if (vaga.getStatus() == false){
             System.out.println("Esta vaga já foi adicionada em outro edital");
             shutdown();
@@ -85,11 +90,11 @@ public class AdicionarVagaEdital implements Runnable {
             shutdown();
             return;
         }
-        if ((utilsEdital.editalExists(output)) == null){
+        if ((editalExists(output)) == null){
             System.out.println("Edital não encontrado.");
             shutdown();
         } 
-        edital = utilsEdital.editalExists(output);
+        edital = editalExists(output);
         Set<Vagas> vagas = edital.getVagas();
         repositoryVagas.remove(vaga);
         vaga.setStatus(true);
@@ -100,6 +105,15 @@ public class AdicionarVagaEdital implements Runnable {
         repository.update(edital);
         System.out.println("\nEdital #"+edital.getId()+" atualizado.\n");
         shutdown();
+    }
+
+    public Editais editalExists(Integer id){
+        for (Editais e : repository.getAll()){
+            if (e.getId().equals(id)){
+                return e;
+            }
+        }
+        return null;
     }
 
     public void shutdown() {

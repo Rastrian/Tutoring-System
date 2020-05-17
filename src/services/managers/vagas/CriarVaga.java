@@ -6,10 +6,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
+import dao.CursosDAO;
 import dao.VagasDAO;
 import enums.Turnos;
+import profiles.Cursos;
 import profiles.Vagas;
-import services.managers.cursos.UtilsCurso;
 
 public class CriarVaga implements Runnable {
     private volatile boolean closeThread;
@@ -17,10 +18,26 @@ public class CriarVaga implements Runnable {
 
     private static Vagas vaga;
 
-    private static UtilsCurso utilsCurso;
-    private static UtilsVagas utils;
-
     private static VagasDAO repository;
+    private static CursosDAO repositoryCursos;
+
+    public Cursos cursoExists(Integer id) {
+        for (Cursos c : repositoryCursos.getAll()){
+            if (c.getId().equals(id)){
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public Vagas vagaExists(Integer id){
+        for (Vagas e : repository.getAll()){
+            if (e.getId().equals(id)){
+                return e;
+            }
+        }
+        return null;
+    }
 
     @Override
     public void run() {
@@ -55,7 +72,7 @@ public class CriarVaga implements Runnable {
             shutdown();
             return;
         }
-        if ((utilsCurso.cursoExists(output)) == null){
+        if ((cursoExists(output)) == null){
             System.out.println("Curso não encontrado.");
             shutdown();
             return;
@@ -101,7 +118,7 @@ public class CriarVaga implements Runnable {
         while (id == null){
             id = (repository.count() + 1);
         }
-        while ((utils.vagaExists(id)) != null) {
+        while ((vagaExists(id)) != null) {
             id++;
         }
         vaga.setId(id);

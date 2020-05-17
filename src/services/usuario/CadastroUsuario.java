@@ -48,7 +48,7 @@ public class CadastroUsuario extends MainService {
     }
 
     public void chooseRole(){
-        ArrayList<Roles> cargos = new ArrayList<Roles>(EnumSet.allOf(Roles.class));;
+        ArrayList<Roles> cargos = new ArrayList<Roles>(EnumSet.allOf(Roles.class));
         cargos.forEach(c -> System.out.println(c.getValue() + " - " + c.getRole()));
         Integer output = null;
         while (output == null){
