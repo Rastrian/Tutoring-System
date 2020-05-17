@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
+import enums.Roles;
+
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,6 +22,12 @@ public class Usuario implements Serializable {
         this.id = id;
         this.nome = nome;
         this.role = 0;
+    }
+
+    public Usuario(Integer id, String nome, Integer role) {
+        this.id = id;
+        this.nome = nome;
+        this.role = role;
     }
 
     public Usuario(Integer id, String nome, Integer role, Set<Cursos> disciplinas) {
@@ -79,6 +87,15 @@ public class Usuario implements Serializable {
     public Usuario disciplinas(Set<Cursos> disciplinas) {
         this.disciplinas = disciplinas;
         return this;
+    }
+
+    public String getRoleName() {
+        for (Roles role : Roles.values()){
+            if (role.getValue() == this.id){
+                return role.getRole();
+            }
+        }
+        return null;
     }
 
     @Override
