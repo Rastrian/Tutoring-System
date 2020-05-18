@@ -10,16 +10,14 @@ public class Candidatos implements Serializable {
     private Integer id;
     private Integer idVaga;
     private Integer idUsuario;
-    private boolean status;
 
     public Candidatos() {
     }
 
-    public Candidatos(Integer id, Integer idVaga, Integer idUsuario, boolean status) {
+    public Candidatos(Integer id, Integer idVaga, Integer idUsuario) {
         this.id = id;
         this.idVaga = idVaga;
         this.idUsuario = idUsuario;
-        this.status = status;
     }
 
     public Integer getId() {
@@ -46,18 +44,6 @@ public class Candidatos implements Serializable {
         this.idUsuario = idUsuario;
     }
 
-    public boolean isStatus() {
-        return this.status;
-    }
-
-    public boolean getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
     public Candidatos id(Integer id) {
         this.id = id;
         return this;
@@ -73,11 +59,6 @@ public class Candidatos implements Serializable {
         return this;
     }
 
-    public Candidatos status(boolean status) {
-        this.status = status;
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -86,12 +67,12 @@ public class Candidatos implements Serializable {
             return false;
         }
         Candidatos candidatos = (Candidatos) o;
-        return Objects.equals(id, candidatos.id) && Objects.equals(idVaga, candidatos.idVaga) && Objects.equals(idUsuario, candidatos.idUsuario) && status == candidatos.status;
+        return Objects.equals(id, candidatos.id) && Objects.equals(idVaga, candidatos.idVaga) && Objects.equals(idUsuario, candidatos.idUsuario);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, idVaga, idUsuario, status);
+        return Objects.hash(id, idVaga, idUsuario);
     }
 
     @Override
@@ -100,7 +81,6 @@ public class Candidatos implements Serializable {
             " id='" + getId() + "'" +
             ", idVaga='" + getIdVaga() + "'" +
             ", idUsuario='" + getIdUsuario() + "'" +
-            ", status='" + isStatus() + "'" +
             "}";
     }
 

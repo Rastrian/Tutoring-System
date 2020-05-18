@@ -18,11 +18,14 @@ public class CadastroUsuario extends MainService {
 
     private static Usuario newUser;
 
+    private static UsuarioUtils utils;
+
     @Override
     public void run() {
         while (!closeThread) {
             try {
                 repository = new UsuarioDAO();
+                utils = new UsuarioUtils();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -86,7 +89,7 @@ public class CadastroUsuario extends MainService {
         newUser.setId(output);                
         System.out.println("\nDados do novo usuario:\n\nMatricula: "+newUser.getId()
             +" \nNome: "+newUser.getNome()+
-            "\nCargo: " + newUser.getRoleName());
+            "\nCargo: " + utils.getRoleName(newUser.getRole()));
     
         repository.add(newUser);
         shutdown();

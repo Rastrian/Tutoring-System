@@ -8,6 +8,7 @@ import dao.EditaisDAO;
 import dao.VagasDAO;
 import profiles.Editais;
 import profiles.Vagas;
+import services.managers.edital.EditalUtils;
 
 public class AdicionarVagaEdital implements Runnable {
     private volatile boolean closeThread;
@@ -18,12 +19,16 @@ public class AdicionarVagaEdital implements Runnable {
     private static Vagas vaga;
     private static Editais edital;
 
+    private static VagaUtils utils;
+    private static EditalUtils utilse;
+
     @Override
     public void run() {
         while (!closeThread) {
             try {
-                repository = new EditaisDAO();
                 repositoryVagas = new VagasDAO();
+                utils = new VagaUtils();
+                utilse = new EditalUtils();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -51,7 +56,7 @@ public class AdicionarVagaEdital implements Runnable {
             shutdown();
             return;
         }
-        vaga = vagaExists(output);
+        vaga = utils.vagaExists(output);
         if (vaga == null){
             System.out.println("Vaga não encontrada.");
             shutdown();
@@ -81,12 +86,12 @@ public class AdicionarVagaEdital implements Runnable {
             shutdown();
             return;
         }
-        if ((editalExists(output)) == null){
+        if ((utilse.editalExists(output)) == null){
             System.out.println("Edital não encontrado.");
             shutdown();
             return;
         } 
-        edital = editalExists(output);
+        edital = utilse.editalExists(output);
         vaga.setStatus(true);
         repositoryVagas.remove(vaga);
         repositoryVagas.add(vaga);
@@ -95,24 +100,6 @@ public class AdicionarVagaEdital implements Runnable {
         repository.update(edital);
         System.out.println("\nEdital #"+edital.getId()+" atualizado.\n");
         shutdown();
-    }
-
-    public Editais editalExists(Integer id){
-        for (Editais e : repository.getAll()){
-            if (e.getId().equals(id)){
-                return e;
-            }
-        }
-        return null;
-    }
-
-    public Vagas vagaExists(Integer id){
-        for (Vagas v : repositoryVagas.getAll()){
-            if (v.getId().equals(id)){
-                return v;
-            }
-        }
-        return null;
     }
 
     public void shutdown() {

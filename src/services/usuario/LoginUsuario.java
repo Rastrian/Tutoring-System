@@ -3,31 +3,26 @@ package services.usuario;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
 
-import dao.MonitoresDAO;
 import dao.UsuarioDAO;
-import enums.Roles;
-import profiles.Monitores;
 import profiles.Usuario;
 import services.MainService;
 import services.usuario.administracao.MenuAdministrador;
+import services.usuario.alunos.MenuAlunos;
+import services.usuario.monitores.MenuMonitores;
 
 public class LoginUsuario extends MainService {
     private volatile boolean closeThread;
 
     private UsuarioDAO repository;
-    private Integer lastUserId = 0;
-    private MonitoresDAO repositoryMonitor;
+    private static UsuarioUtils utils;
 
     @Override
     public void run() {
         while (!closeThread) {
             try {
                 repository = new UsuarioDAO();
-                repositoryMonitor = new MonitoresDAO();
+                utils = new UsuarioUtils();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -52,7 +47,7 @@ public class LoginUsuario extends MainService {
             }
             if (output == -2){
                 for (Usuario u : repository.getAll()){
-                    System.out.println(u.getId()+" - "+u.getNome()+" ("+getRoleName(u.getRole())+")");
+                    System.out.println(u.getId()+" - "+u.getNome()+" ("+utils.getRoleName(u.getRole())+")");
                 }
                 return;
             }
@@ -69,53 +64,33 @@ public class LoginUsuario extends MainService {
             shutdown();
             return;
         }
-        this.setLastLogin(output);
+        utils.setLastLogin(output);
+
+        Thread t = null;
         if (u.getRole().equals(0)){
-            if (isMonitor(output) == false){
+            if (utils.isMonitor(output) == false){
                 System.out.println("Bem vindo "+u.getNome()+", ao menu de Alunos.");
+                MenuAlunos menuAlunos = new MenuAlunos();
+                t = new Thread(menuAlunos);
             }else{
                 System.out.println("Bem vindo "+u.getNome()+", ao menu de Monitores.");
+                MenuMonitores menuMonitores = new MenuMonitores();
+                t = new Thread(menuMonitores);
             }
         }
         if (u.getRole().equals(2) || u.getRole().equals(1)){
             System.out.println("Bem vindo "+u.getNome()+", ao menu de Coordenador.");
             MenuAdministrador MAdmin = new MenuAdministrador();
-            Thread t = new Thread(MAdmin);
+            t = new Thread(MAdmin);
+        }
+        if (t != null){
             t.start();
             try {
                 t.join();
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void setLastLogin(Integer id) {
-        lastUserId = id;
-    }
-
-    public Integer getLastUserId(){
-        return lastUserId;
-    }
-
-    public boolean isMonitor(Integer userId){
-        List<Monitores> monitores = repositoryMonitor.getAll();
-        for (Monitores m : monitores){
-            if (m.getIdusuario().equals(userId)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public String getRoleName(Integer id) {
-        ArrayList<Roles> cargos = new ArrayList<Roles>(EnumSet.allOf(Roles.class));
-        for (Roles role : cargos){
-            if (role.getValue().equals(id)){
-                return role.getRole();
-            }
-        }
-        return null;
     }
 
     public void shutdown() {

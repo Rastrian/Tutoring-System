@@ -13,11 +13,14 @@ public class DesativarEdital implements Runnable {
     private static EditaisDAO repository;
     private static Editais edital;
 
+    private static EditalUtils utils;
+
     @Override
     public void run() {
         while (!closeThread) {
             try {
                 repository = new EditaisDAO();
+                utils = new EditalUtils();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -41,9 +44,9 @@ public class DesativarEdital implements Runnable {
             shutdown();
             return;
         }
-        edital = editalExists(output);
+        edital = utils.editalExists(output);
         if (edital == null){
-            System.out.println("Curso não encontrado.");
+            System.out.println("Edital não encontrado.");
             shutdown();
             return;
         }
@@ -51,15 +54,6 @@ public class DesativarEdital implements Runnable {
         edital.setStatus(false);
         repository.add(edital);
         shutdown();
-    }
-
-    public Editais editalExists(Integer id){
-        for (Editais e : repository.getAll()){
-            if (e.getId().equals(id)){
-                return e;
-            }
-        }
-        return null;
     }
 
     public void shutdown() {

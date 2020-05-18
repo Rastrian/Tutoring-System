@@ -13,20 +13,14 @@ public class CriarCurso implements Runnable {
     private static Cursos cursos;
     private static CursosDAO repository;
 
-    public Cursos cursoExists(Integer id) {
-        for (Cursos c : repository.getAll()){
-            if (c.getId().equals(id)){
-                return c;
-            }
-        }
-        return null;
-    }
-
+    private static CursoUtils utils;
+    
     @Override
     public void run() {
         while (!closeThread) {
             try {
                 repository = new CursosDAO();
+                utils = new CursoUtils();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -51,7 +45,7 @@ public class CriarCurso implements Runnable {
         while (id == null) {
             id = (repository.count() + 1);
         }
-        while ((cursoExists(id)) != null) {
+        while ((utils.cursoExists(id)) != null) {
             id++;
         }
         cursos.setId(id);

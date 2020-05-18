@@ -1,7 +1,6 @@
 package profiles;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -10,31 +9,22 @@ public class Monitores implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
     private Integer idusuario;
     private Integer idvaga;
     private Set<Relatorios> relatorios = new HashSet<Relatorios>();
-    private Set<Date> presenca = new HashSet<Date>();
+    private String horarios;
     private boolean status;
 
     public Monitores() {
     }
 
-    public Monitores(Integer id, Integer idusuario, Integer idvaga, Set<Relatorios> relatorios, Set<Date> presenca, boolean status) {
-        this.id = id;
+
+    public Monitores(Integer idusuario, Integer idvaga, Set<Relatorios> relatorios, String horarios, boolean status) {
         this.idusuario = idusuario;
         this.idvaga = idvaga;
         this.relatorios = relatorios;
-        this.presenca = presenca;
+        this.horarios = horarios;
         this.status = status;
-    }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Integer getIdusuario() {
@@ -61,12 +51,12 @@ public class Monitores implements Serializable {
         this.relatorios = relatorios;
     }
 
-    public Set<Date> getPresenca() {
-        return this.presenca;
+    public String getHorarios() {
+        return this.horarios;
     }
 
-    public void setPresenca(Set<Date> presenca) {
-        this.presenca = presenca;
+    public void setHorarios(String horarios) {
+        this.horarios = horarios;
     }
 
     public boolean isStatus() {
@@ -79,11 +69,6 @@ public class Monitores implements Serializable {
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public Monitores id(Integer id) {
-        this.id = id;
-        return this;
     }
 
     public Monitores idusuario(Integer idusuario) {
@@ -101,8 +86,8 @@ public class Monitores implements Serializable {
         return this;
     }
 
-    public Monitores presenca(Set<Date> presenca) {
-        this.presenca = presenca;
+    public Monitores horarios(String horarios) {
+        this.horarios = horarios;
         return this;
     }
 
@@ -119,24 +104,24 @@ public class Monitores implements Serializable {
             return false;
         }
         Monitores monitores = (Monitores) o;
-        return Objects.equals(id, monitores.id) && Objects.equals(idusuario, monitores.idusuario) && Objects.equals(idvaga, monitores.idvaga) && Objects.equals(relatorios, monitores.relatorios) && Objects.equals(presenca, monitores.presenca) && status == monitores.status;
+        return Objects.equals(idusuario, monitores.idusuario) && Objects.equals(idvaga, monitores.idvaga) && Objects.equals(relatorios, monitores.relatorios) && Objects.equals(horarios, monitores.horarios) && status == monitores.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, idusuario, idvaga, relatorios, presenca, status);
+        return Objects.hash(idusuario, idvaga, relatorios, horarios, status);
     }
 
     @Override
     public String toString() {
         return "{" +
-            " id='" + getId() + "'" +
             ", idusuario='" + getIdusuario() + "'" +
             ", idvaga='" + getIdvaga() + "'" +
             ", relatorios='" + getRelatorios() + "'" +
-            ", presenca='" + getPresenca() + "'" +
+            ", horarios='" + getHorarios() + "'" +
             ", status='" + isStatus() + "'" +
             "}";
     }
+
 
 }

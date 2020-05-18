@@ -16,6 +16,7 @@ import services.managers.edital.ListarEditaisDesativados;
 import services.managers.vagas.AdicionarVagaEdital;
 import services.managers.vagas.CriarVaga;
 import services.managers.vagas.DeletarVaga;
+import services.managers.vagas.FinalizarVaga;
 
 public class MenuAdministrador extends MainService {
     private volatile boolean closeThread;
@@ -29,10 +30,11 @@ public class MenuAdministrador extends MainService {
     }
 
     public void start() {
-        System.out.println("\nOpções:\n\n1 → Criar Curso.\n2 → Deletar Curso.\n3 → Listar cursos."
+        System.out.println("\nOpções:\n\n0 → Deslogar.\n1 → Criar Curso.\n2 → Deletar Curso.\n3 → Listar cursos."
                 + "\n4 → Criar Edital.\n5 → Desativar Edital.\n6 → Informações sobre um Edital."
                 + "\n7 → Listar Editais Disponiveis.\n8 → Listar Editais Desativados."
                 + "\n9 → Criar Vaga.\n10 → Deletar Vaga.\n11 → Adicionar Vaga a Edital."
+                + "\n12 → Decidir sobre uma Vaga."
                 + "\n\nInsira a opção desejada:");
         Integer output = null;
         while (output == null) {
@@ -44,6 +46,10 @@ public class MenuAdministrador extends MainService {
                     System.out.println("Insira um formato valido");
                 }
             }
+        }
+        if (output == 0) {
+            shutdown();
+            return;
         }
         if (output != null){
             inUse();
@@ -93,6 +99,10 @@ public class MenuAdministrador extends MainService {
         if (output == 11) {
             AdicionarVagaEdital adcVaga = new AdicionarVagaEdital();
             t = new Thread(adcVaga);
+        }
+        if (output == 12) {
+            FinalizarVaga finalizarVaga = new FinalizarVaga();
+            t = new Thread(finalizarVaga);
         }
         if (t != null){
             t.start();

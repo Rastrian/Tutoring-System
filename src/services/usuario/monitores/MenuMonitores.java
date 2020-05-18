@@ -4,9 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import services.managers.monitor.FinalizarMonitoria;
-import services.managers.monitor.IniciarMonitoria;
-import services.managers.monitor.RelatorioMonitoria;
+import services.managers.monitor.HorariosMonitoria;
+import services.managers.monitor.StatusMonitoria;
 
 public class MenuMonitores implements Runnable {
     private volatile boolean closeThread;
@@ -23,7 +22,7 @@ public class MenuMonitores implements Runnable {
         Integer output = null;
         while (output == null) {
             if (!inUse) {
-                System.out.println("\nOpções:\n\n1 → Bater ponto diario.\n2 → Registrar atendimento.\n3 → Finalizar monitoria."+
+                System.out.println("\nOpções:\n\n0 → Deslogar.\n1 → Alterar status da monitoria.\n2 → Registrar atendimento.\n3 → Definir horarios."+
                 "\n\nInsira a opção desejada:");
                 final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 try {
@@ -33,21 +32,24 @@ public class MenuMonitores implements Runnable {
                 }
             }
         }
+        if (output == 0) {
+            shutdown();
+            return;
+        }
         if (output != null){
             inUse();
         }
         Thread t = null;
         if (output == 1) {
-            IniciarMonitoria iniciarMonitoria = new IniciarMonitoria();
-            t = new Thread(iniciarMonitoria);
+            StatusMonitoria statusMonitoria = new StatusMonitoria();
+            t = new Thread(statusMonitoria);
         }
         if (output == 2) {
-            RelatorioMonitoria relatorioMonitoria = new RelatorioMonitoria();
-            t = new Thread(relatorioMonitoria);
+            System.out.println("Não implementado - TODO");
         }
         if (output == 3) {
-            FinalizarMonitoria finalizarMonitoria = new FinalizarMonitoria();
-            t = new Thread(finalizarMonitoria);
+            HorariosMonitoria horariosMonitoria = new HorariosMonitoria();
+            t = new Thread(horariosMonitoria);
         }
         if (t != null){
             t.start();

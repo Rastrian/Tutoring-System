@@ -13,20 +13,14 @@ public class DeletarVaga implements Runnable {
     private static Vagas vaga;
     private static VagasDAO repository;
 
-    public Vagas vagaExists(Integer id){
-        for (Vagas e : repository.getAll()){
-            if (e.getId().equals(id)){
-                return e;
-            }
-        }
-        return null;
-    }
+    private static VagaUtils utils;
 
     @Override
     public void run() {
         while (!closeThread) {
             try {
                 repository = new VagasDAO();
+                utils = new VagaUtils();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -50,7 +44,7 @@ public class DeletarVaga implements Runnable {
             shutdown();
             return;
         }
-        vaga = vagaExists(output);
+        vaga = utils.vagaExists(output);
         if (vaga == null){
             System.out.println("Vaga não encontrada.");
             shutdown();

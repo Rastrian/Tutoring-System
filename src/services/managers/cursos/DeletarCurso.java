@@ -13,20 +13,14 @@ public class DeletarCurso implements Runnable {
     private static Cursos cursos;
     private static CursosDAO repository;
 
-    public Cursos cursoExists(Integer id) {
-        for (Cursos c : repository.getAll()){
-            if (c.getId().equals(id)){
-                return c;
-            }
-        }
-        return null;
-    }
+    private static CursoUtils utils;
 
     @Override
     public void run() {
         while (!closeThread) {
             try {
                 repository = new CursosDAO();
+                utils = new CursoUtils();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -51,7 +45,7 @@ public class DeletarCurso implements Runnable {
             shutdown();
             return;
         }
-        cursos = cursoExists(output);
+        cursos = utils.cursoExists(output);
         if (cursos == null) {
             System.out.println("Curso não encontrado.");
         }

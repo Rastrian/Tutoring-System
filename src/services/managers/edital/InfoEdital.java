@@ -5,33 +5,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import dao.CursosDAO;
 import dao.EditaisDAO;
 import profiles.Cursos;
 import profiles.Editais;
 import profiles.Vagas;
+import services.managers.cursos.CursoUtils;
 
 public class InfoEdital implements Runnable {
     private volatile boolean closeThread;
 
     private static EditaisDAO repository;
-    private static CursosDAO repositoryCursos;
 
-    public Cursos cursoExists(Integer id) {
-        for (Cursos c : repositoryCursos.getAll()){
-            if (c.getId().equals(id)){
-                return c;
-            }
-        }
-        return null;
-    }
+    private static CursoUtils utils;
 
     @Override
     public void run() {
         while (!closeThread) {
             try {
                 repository = new EditaisDAO();
-                repositoryCursos = new CursosDAO();
+                utils = new CursoUtils();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -67,10 +59,11 @@ public class InfoEdital implements Runnable {
                 +"\nVagas:");
             if (vagas != null)
                 vagas.forEach(v -> {
-                    Cursos c = cursoExists(v.getIdcurso());
-                    System.out.println(v.getId()+" - Curso: "+c.getNome()+" (Turno: "+
-                    v.getTurnoName(v.getTurno())+"/ Carga Horaria: "+v.getCarga_horaria()
-                    +" Horas)");
+                    Cursos c = utils.cursoExists(v.getIdcurso());
+                    if (c != null)
+                        System.out.println(v.getId()+" - Curso: "+c.getNome()+" (Turno: "+
+                        v.getTurnoName(v.getTurno())+"/ Carga Horaria: "+v.getCarga_horaria()
+                        +" Horas)");
                 });
             else
                 System.out.println("Não há vagas disponiveis para este edital.");

@@ -31,7 +31,7 @@ public class MonitoresDAO implements DAO<Monitores, Integer> {
 	public Monitores get(Integer id) {
 		readFromFile();
 		for (Monitores usu : lista) {
-			if (usu.getId().equals(id)) {
+			if (usu.getIdusuario().equals(id)) {
 				return usu;
 			}
 		}
@@ -49,7 +49,7 @@ public class MonitoresDAO implements DAO<Monitores, Integer> {
 			saveToFile();
 			return true;
 		} catch (Exception e) {
-			System.out.println("ERRO ao gravar o Monitores '" + Monitores.getId() + "' no disco!");
+			System.out.println("ERRO ao gravar o Monitores '" + Monitores.getIdusuario() + "' no disco!");
 			e.printStackTrace();
 			return false;
 		}

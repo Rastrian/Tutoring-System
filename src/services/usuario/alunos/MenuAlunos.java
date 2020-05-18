@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import services.managers.disciplinas.AdicionarDisciplinas;
-import services.managers.disciplinas.RemoverDisciplinas;
 import services.managers.edital.ResultadoEditais;
 import services.managers.edital.VerEditais;
 import services.managers.monitor.MonitoriasDisponiveis;
@@ -25,11 +23,9 @@ public class MenuAlunos implements Runnable{
         Integer output = null;
         while (output == null) {
             if (!inUse) {
-                System.out.println("\nOpções:\n\n1 → Ver Editais"+
+                System.out.println("\nOpções:\n\n0 → Deslogar.\n1 → Ver Editais"+
                 "\n2 → Resultado de Editais"+
-                "\n3 → Adicionar disciplinas"+
-                "\n4 → Remover disciplinas"+
-                "\n5 → Ver monitorias disponiveis"+
+                "\n3 → Ver monitorias disponiveis"+
                 "\n\nInsira a opção desejada:");
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 try {
@@ -38,6 +34,10 @@ public class MenuAlunos implements Runnable{
                     System.out.println("Insira um formato valido");
                 }
             }
+        }
+        if (output == 0) {
+            shutdown();
+            return;
         }
         if (output != null){
             inUse();
@@ -52,14 +52,6 @@ public class MenuAlunos implements Runnable{
             t = new Thread(resultadoEditais);
         }
         if (output == 3) {
-            AdicionarDisciplinas adcDisciplinas = new AdicionarDisciplinas();
-            t = new Thread(adcDisciplinas);
-        }
-        if (output == 4) {
-            RemoverDisciplinas removerDisciplinas = new RemoverDisciplinas();
-            t = new Thread(removerDisciplinas);
-        }
-        if (output == 5) {
             MonitoriasDisponiveis monitoriasDisponiveis = new MonitoriasDisponiveis();
             t = new Thread(monitoriasDisponiveis);
         }

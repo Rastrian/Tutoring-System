@@ -6,11 +6,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-import dao.CursosDAO;
 import dao.VagasDAO;
 import enums.Turnos;
-import profiles.Cursos;
 import profiles.Vagas;
+import services.managers.cursos.CursoUtils;
 
 public class CriarVaga implements Runnable {
     private volatile boolean closeThread;
@@ -19,32 +18,17 @@ public class CriarVaga implements Runnable {
     private static Vagas vaga;
 
     private static VagasDAO repository;
-    private static CursosDAO repositoryCursos;
 
-    public Cursos cursoExists(Integer id) {
-        for (Cursos c : repositoryCursos.getAll()){
-            if (c.getId().equals(id)){
-                return c;
-            }
-        }
-        return null;
-    }
-
-    public Vagas vagaExists(Integer id){
-        for (Vagas e : repository.getAll()){
-            if (e.getId().equals(id)){
-                return e;
-            }
-        }
-        return null;
-    }
+    private static VagaUtils utils;
+    private static CursoUtils utilsc;
 
     @Override
     public void run() {
         while (!closeThread) {
             try {
                 repository = new VagasDAO();
-                repositoryCursos = new CursosDAO();
+                utils = new VagaUtils();
+                utilsc = new CursoUtils();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -73,7 +57,7 @@ public class CriarVaga implements Runnable {
             shutdown();
             return;
         }
-        if ((cursoExists(output)) == null){
+        if ((utilsc.cursoExists(output)) == null){
             System.out.println("Curso não encontrado.");
             shutdown();
             return;
@@ -119,7 +103,7 @@ public class CriarVaga implements Runnable {
         while (id == null){
             id = (repository.count() + 1);
         }
-        while ((vagaExists(id)) != null) {
+        while ((utils.vagaExists(id)) != null) {
             id++;
         }
         vaga.setId(id);

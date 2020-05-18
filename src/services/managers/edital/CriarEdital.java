@@ -11,11 +11,14 @@ public class CriarEdital implements Runnable {
     private static EditaisDAO repository;
     private static Editais edital;
 
+    private static EditalUtils utils;
+
     @Override
     public void run() {
         while (!closeThread) {
             try {
                 repository = new EditaisDAO();
+                utils = new EditalUtils();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -29,7 +32,7 @@ public class CriarEdital implements Runnable {
         while (id == null){
             id = (repository.count() + 1);
         }
-        while ((editalExists(id)) != null) {
+        while ((utils.editalExists(id)) != null) {
             id++;
         }
         edital.setId(id);
@@ -37,15 +40,6 @@ public class CriarEdital implements Runnable {
         repository.add(edital);
         System.out.println("\nEdital N° "+edital.getId()+" foi criado com sucesso.\n");
         shutdown();
-    }
-
-    public Editais editalExists(Integer id){
-        for (Editais e : repository.getAll()){
-            if (e.getId().equals(id)){
-                return e;
-            }
-        }
-        return null;
     }
 
     public void shutdown() {
